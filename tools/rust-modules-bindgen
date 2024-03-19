@@ -36,5 +36,7 @@ if [[ "$ANDROID" == "true" ]]; then
         --language kotlin
 
     cp -r jniLibs ../android/app/src/androidTest
+    cp -r jniLibs ../android/app/src/main
     cp -r src/uniffi ../android/app/src/androidTest/java
+    cp -r src/uniffi ../android/app/src/main/java
 fi
