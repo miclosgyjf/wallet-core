@@ -2,15 +2,15 @@
 //
 // Copyright © 2017 Trust Wallet.
 
-pub extern crate tw_any_coin;
-pub extern crate tw_aptos;
-pub extern crate tw_bitcoin;
-pub extern crate tw_coin_registry;
-pub extern crate tw_encoding;
-pub extern crate tw_ethereum;
-pub extern crate tw_hash;
-pub extern crate tw_keypair;
-pub extern crate tw_memory;
-pub extern crate tw_proto;
+extern crate tw_any_coin;
+extern crate tw_aptos;
+extern crate tw_bitcoin;
+extern crate tw_coin_registry;
+extern crate tw_encoding;
+extern crate tw_ethereum;
+extern crate tw_hash;
+extern crate tw_keypair;
+extern crate tw_memory;
+extern crate tw_proto;
 
 pub mod ffi;

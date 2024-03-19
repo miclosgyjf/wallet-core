@@ -1,0 +1,40 @@
+#!/bin/bash
+
+set -e
+
+source "$(dirname $0)/android-sdk"
+
+cd wallet-modules
+
+export RUSTFLAGS="-Zlocation-detail=none"
+
+ANDROID="true"
+if [[ "$ANDROID" == "true" ]]; then
+  NDK_BIN_PATH=$(find_android_ndk)
+
+  export AR="$NDK_BIN_PATH/llvm-ar"
+  export CC_aarch64_linux_android="$NDK_BIN_PATH/aarch64-linux-android$NDK_API_LEVEL-clang"
+  export CC_x86_64_linux_android="$NDK_BIN_PATH/x86_64-linux-android$NDK_API_LEVEL-clang"
+  export CC_i686_linux_android="$NDK_BIN_PATH/i686-linux-android$NDK_API_LEVEL-clang"
+  export CC_armv7_linux_androideabi="$NDK_BIN_PATH/armv7a-linux-androideabi$NDK_API_LEVEL-clang"
+
+  echo "Generating Android targets"
+  cargo build -Z build-std=std,panic_abort --target aarch64-linux-android --target armv7-linux-androideabi --target x86_64-linux-android --target i686-linux-android --release --lib
+
+  mkdir -p jniLibs/arm64-v8a/ && \
+    cp target/aarch64-linux-android/release/libwallet_modules.so jniLibs/arm64-v8a/libuniffi_wallet_modules.so && \
+    mkdir -p jniLibs/armeabi-v7a/ && \
+      cp target/armv7-linux-androideabi/release/libwallet_modules.so jniLibs/armeabi-v7a/libuniffi_wallet_modules.so && \
+    mkdir -p jniLibs/x86/ && \
+      cp target/i686-linux-android/release/libwallet_modules.so jniLibs/x86/libuniffi_wallet_modules.so && \
+    mkdir -p jniLibs/x86_64/ && \
+      cp target/x86_64-linux-android/release/libwallet_modules.so jniLibs/x86_64/libuniffi_wallet_modules.so
+
+    cargo run --features=uniffi/cli \
+        --bin uniffi-bindgen \
+        generate src/wallet_modules.udl \
+        --language kotlin
+
+    cp -r jniLibs ../android/app/src/androidTest
+    cp -r src/uniffi ../android/app/src/androidTest/java
+fi

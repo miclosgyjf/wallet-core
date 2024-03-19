@@ -6,6 +6,7 @@ import wallet.core.jni.Curve
 import wallet.core.jni.PublicKey
 import wallet.core.jni.Purpose
 import wallet.core.jni.Derivation
+import uniffi.wallet_modules.twExampleModuleRequest
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -64,5 +65,11 @@ class TestCoinType {
 
         val address = CoinType.BITCOIN.deriveAddressFromPublicKeyAndDerivation(publicKey, Derivation.BITCOINSEGWIT)
         assertEquals(address, "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4")
+    }
+
+    @Test
+    fun testWalletModules() {
+        val x = twExampleModuleRequest(1u)
+        assert(x.isNotEmpty())
     }
 }
